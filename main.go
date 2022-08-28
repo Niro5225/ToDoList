@@ -39,6 +39,8 @@ func init() {
 
 func main() {
 
+	LoginWin := mw.New_Window(a, "Login", container.NewHBox())
+
 	configs, conferr := userconfig.ReadConfigs("UserConfig.json")
 	if conferr != nil {
 		loger.Error(conferr)
@@ -68,6 +70,7 @@ func main() {
 			loger.Error(err)
 		} else {
 			loger.Info("Successful login", CurrUser)
+			LoginWin.CloseWin()
 			CreateMainWinContent(CurrUser)
 		}
 	})
@@ -78,6 +81,7 @@ func main() {
 			loger.Error(err)
 		} else {
 			loger.Info("Successful registration", CurrUser)
+			LoginWin.CloseWin()
 			CreateMainWinContent(CurrUser)
 		}
 	})
@@ -102,7 +106,7 @@ func main() {
 
 	log_win_cont := container.NewCenter(container.NewVBox(user_data_gr, but_grid))
 
-	LoginWin := mw.New_Window(a, "Login", log_win_cont)
+	LoginWin.SetWinContent(log_win_cont)
 
 	LoginWin.ShowWin()
 	a.Run()

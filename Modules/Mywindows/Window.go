@@ -16,6 +16,14 @@ func New_Window(a fyne.App, WinName string, content *fyne.Container) Window {
 	return Window{a: a, w: win, content: content}
 }
 
+func (win *Window) SetWinContent(content *fyne.Container) {
+	win.w.SetContent(content)
+}
+
+func (win *Window) CloseWin() {
+	win.w.Hide()
+}
+
 func (win *Window) ShowWin() {
 	win.w.Show()
 }

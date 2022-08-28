@@ -15,6 +15,7 @@ type MainWin struct {
 
 func NewMainWin(a fyne.App, WinName string) MainWin {
 	win := New_Window(a, WinName, container.NewGridWithColumns(2))
+	win.w.SetCloseIntercept(func() { win.a.Quit() })
 	return MainWin{win: win}
 }
 func (m *MainWin) UpdateContent(l_side *fyne.Container, r_side *fyne.Container) {
