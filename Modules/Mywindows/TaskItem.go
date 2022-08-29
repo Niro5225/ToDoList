@@ -45,6 +45,9 @@ func NewTaskItem(t dbstructs.Task, db *gorm.DB) TaskItem {
 			l.Loger.Info(fmt.Sprintf("TASK:%s was done and update", t.Name))
 			upd_task := dbstructs.NewTaskItem(t.Name, t.Context, t.Type, t.User_name, false)
 			db.Model(&upd_task).Where("name = ?", upd_task.Name).Update("status", false)
+		} else {
+			upd_task := dbstructs.NewTaskItem(t.Name, t.Context, t.Type, t.User_name, true)
+			db.Model(&upd_task).Where("name = ?", upd_task.Name).Update("status", true)
 		}
 	})
 	cb.Resize(fyne.NewSize(20, 50))
