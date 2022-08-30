@@ -19,13 +19,16 @@ func NewMainWin(a fyne.App, WinName string) MainWin {
 	return MainWin{win: win}
 }
 func (m *MainWin) UpdateContent(l_side *fyne.Container, r_side *fyne.Container) {
+	//Сохранеие контента правой части окна
 	m.right_side = r_side
 	m.win.content.Add(container.NewHScroll(l_side))
 	m.win.content.Add(m.right_side)
 	m.win.ShowWin()
 }
 
+//Функция обновления TaskListWidget
 func (m *MainWin) UpdateLW(CurrUser dbstructs.User, Db db.DB) {
+	//Получение обновленных задач
 	new_tasks := Db.GetTasks(CurrUser)
 	// loger.Info("Got tasks", tasks)
 	var new_TIarr []TaskItem
@@ -34,6 +37,7 @@ func (m *MainWin) UpdateLW(CurrUser dbstructs.User, Db db.DB) {
 	}
 	// loger.Info(TIarr)
 
+	//Создание обновленного списка
 	TLwidget := NewTaskListWid(new_TIarr, Db.Db)
 	left_side := container.NewHScroll(TLwidget.CreateListWid())
 	m.win.content = container.NewGridWithColumns(2, container.NewVScroll(left_side), m.right_side)

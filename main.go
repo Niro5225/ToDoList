@@ -22,25 +22,30 @@ var Db db.DB
 var a fyne.App
 
 func init() {
+	//Обьект логера
 	l = loging.NewLoging("Main file.log")
 	loger = l.Loger
+	//Конфиг для запуска БД
 	configs, err := db.GetDBConfig("configs/DBConf.json")
 	if err != nil {
 		loger.Fatal(err)
 		panic(err)
 	}
+	//БД
 	Db, err = db.NewDB(configs)
 	if err != nil {
 		loger.Fatal(err)
 		panic(err)
 	}
+	//Главное приложение
 	a = app.New()
 }
 
 func main() {
-
+	//Окно для входа
 	LoginWin := mw.New_Window(a, "Login", container.NewHBox())
 
+	//Конфиг с данными для входа
 	configs, conferr := userconfig.ReadConfigs("UserConfig.json")
 	if conferr != nil {
 		loger.Error(conferr)
@@ -49,6 +54,7 @@ func main() {
 	uname_lab := widget.NewLabel("Username")
 	uname_ent := widget.NewEntry()
 	if conferr == nil {
+		//Если при получения данных конфига не возникло ошибки данные записываются в поля
 		uname_ent.SetText(configs.Username)
 	}
 
@@ -59,29 +65,37 @@ func main() {
 	pass_ent := widget.NewEntry()
 	pass_ent.Password = true
 	if conferr == nil {
+		//Если при получения данных конфига не возникло ошибки данные записываются в поля
 		UnHashPass, _ := b64.URLEncoding.DecodeString(configs.Password)
 		pass_ent.SetText(string(UnHashPass))
 	}
 
+	//Кнопка обрабатывающая вход
 	login_but := widget.NewButton("Login", func() {
-
+		//получения текущего пользователя
 		CurrUser, err := Db.Login(uname_ent.Text, pass_ent.Text, log_ent.Text)
 		if err != nil {
 			loger.Error(err)
 		} else {
 			loger.Info("Successful login", CurrUser)
+			//Закрытие окна входа
 			LoginWin.CloseWin()
+			//Создания главного окна
 			CreateMainWinContent(CurrUser)
 		}
 	})
 
+	//Кнопка обрабатывающая регистрацию
 	Reg_but := widget.NewButton("Register", func() {
+		//получения текущего пользователя
 		CurrUser, err := Db.Registration(uname_ent.Text, pass_ent.Text, log_ent.Text)
 		if err != nil {
 			loger.Error(err)
 		} else {
 			loger.Info("Successful registration", CurrUser)
+			//Закрытие окна входа
 			LoginWin.CloseWin()
+			//Создания главного окна
 			CreateMainWinContent(CurrUser)
 		}
 	})
@@ -89,9 +103,11 @@ func main() {
 	none_lab := widget.NewLabel("")
 	ch := widget.NewCheck("Remember me", func(b bool) {
 		if b {
+			//Обработка вкючения чекбокса, создания конфига с данными для входа
 			hashPassword := b64.StdEncoding.EncodeToString([]byte(pass_ent.Text))
 			userconfig.CreateConfigs(uname_ent.Text, hashPassword, "UserConfig.json")
 		} else {
+			//Обработка выключения чекбокса, удаления конфига с данными для входа
 			os.Remove("configs/UserConfig.json")
 		}
 	})
@@ -114,6 +130,7 @@ func main() {
 }
 
 func CreateMainWinContent(CurrUser dbstructs.User) {
+	//Создание окна
 	Main_win := mw.NewMainWin(a, "To Do")
 
 	CreateTaskBut := widget.NewButton("Create new task", func() {
@@ -133,6 +150,7 @@ func CreateMainWinContent(CurrUser dbstructs.User) {
 	TLwidget := mw.NewTaskListWid(TIarr, Db.Db)
 	left_side := TLwidget.CreateListWid()
 
+	//Обновления контента в окне
 	Main_win.UpdateContent(left_side, right_side)
 
 }

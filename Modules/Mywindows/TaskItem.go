@@ -13,6 +13,7 @@ import (
 	"gorm.io/gorm"
 )
 
+//Структура обьекта задачи для списка обьектов задач
 type TaskItem struct {
 	task        dbstructs.Task
 	task_status bool
@@ -37,10 +38,10 @@ func NewTaskItem(t dbstructs.Task, db *gorm.DB) TaskItem {
 	case "none":
 		task_name_lab = canvas.NewText(t.Name, color.NRGBA{255, 255, 255, 255})
 	}
-	// task_name_lab := t.Name
 	task_con_lab := widget.NewLabel(t.Context)
 	autor_lab := widget.NewLabel(t.User_name)
 	cb := widget.NewCheck("", func(b bool) {
+		//Отслеживание выполнения/отмены выполнения задачи
 		if b {
 			l.Loger.Info(fmt.Sprintf("TASK:%s was done and update", t.Name))
 			upd_task := dbstructs.NewTaskItem(t.Name, t.Context, t.Type, t.User_name, false)
@@ -53,6 +54,7 @@ func NewTaskItem(t dbstructs.Task, db *gorm.DB) TaskItem {
 	cb.Resize(fyne.NewSize(20, 50))
 	task_st := t.Status
 	var cont *fyne.Container
+	//Обновление контента задачи если она выполнена\не выполнена
 	if t.Status {
 		l.Loger.Info("t STATUS true")
 		cont = container.NewHBox(cb, container.NewVBox(task_name_lab, container.NewHBox(task_con_lab, autor_lab)))

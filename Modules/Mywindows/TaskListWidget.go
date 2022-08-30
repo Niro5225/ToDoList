@@ -9,12 +9,11 @@ import (
 	"gorm.io/gorm"
 )
 
+//Список обьектов задач
 type TaskListWid struct {
-	tasks []TaskItem
-	// w        fyne.Window
+	tasks    []TaskItem
 	list_con *fyne.Container
-	// db       *gorm.DB
-	l loging.Loging
+	l        loging.Loging
 }
 
 func NewTaskListWid(t []TaskItem, db *gorm.DB) TaskListWid {
@@ -30,6 +29,7 @@ func (tl *TaskListWid) CreateListWid() *fyne.Container {
 	imp := []TaskItem{}
 	normal := []TaskItem{}
 	lat := []TaskItem{}
+	//Сортировка по приоритету задачи
 	for _, task := range tl.tasks {
 		switch task.task_type {
 		case "important":

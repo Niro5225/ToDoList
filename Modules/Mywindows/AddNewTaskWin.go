@@ -10,9 +10,7 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
-type AddNewTaskWin struct {
-}
-
+//Создания окна для добавления задач
 func CreateAddTaskWin(a fyne.App, Db db.DB, currUser dbstructs.User, mainwin *MainWin) {
 	w := a.NewWindow("Add new task")
 	name_lab := widget.NewLabel("Task name")
