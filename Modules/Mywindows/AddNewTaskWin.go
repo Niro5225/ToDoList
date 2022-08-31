@@ -3,6 +3,7 @@ package mywindows
 import (
 	db "ToDoList/Modules/DB"
 	dbstructs "ToDoList/Modules/DBStructs"
+	"ToDoList/Modules/gerror"
 	"fmt"
 
 	"fyne.io/fyne/v2"
@@ -25,6 +26,8 @@ func CreateAddTaskWin(a fyne.App, Db db.DB, currUser dbstructs.User, mainwin *Ma
 		//Добавляем задачу в БД
 		res := Db.Db.Create(&t)
 		if res.Error != nil {
+			ger := gerror.NewGError(a, "Task already created")
+			ger.ShowError()
 			fmt.Println("ERROR")
 		}
 		mainwin.UpdateLW(currUser, Db)

@@ -4,6 +4,7 @@ import (
 	db "ToDoList/Modules/DB"
 	dbstructs "ToDoList/Modules/DBStructs"
 	userconfig "ToDoList/Modules/UserConfig"
+	"ToDoList/Modules/gerror"
 	"ToDoList/Modules/loging"
 	mw "ToDoList/Modules/mywindows"
 	b64 "encoding/base64"
@@ -76,6 +77,8 @@ func main() {
 		CurrUser, err := Db.Login(uname_ent.Text, pass_ent.Text, log_ent.Text)
 		if err != nil {
 			loger.Error(err)
+			ger := gerror.NewGError(a, "Wrong login or password")
+			ger.ShowError()
 		} else {
 			loger.Info("Successful login", CurrUser)
 			//Закрытие окна входа
@@ -91,6 +94,8 @@ func main() {
 		CurrUser, err := Db.Registration(uname_ent.Text, pass_ent.Text, log_ent.Text)
 		if err != nil {
 			loger.Error(err)
+			ger := gerror.NewGError(a, "User already created")
+			ger.ShowError()
 		} else {
 			loger.Info("Successful registration", CurrUser)
 			//Закрытие окна входа
